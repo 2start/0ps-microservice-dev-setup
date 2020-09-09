@@ -23,6 +23,7 @@ services:
     depends_on:
       - db
     environment:
+      PORT: ${TOMUDO_TODO_STORE_PORT}
       TOMUDO_DB_USER: ${TOMUDO_DB_USER}
       TOMUDO_DB_PW: ${TOMUDO_DB_PW}
       TOMUDO_DB_NAME: ${TOMUDO_DB_NAME}
