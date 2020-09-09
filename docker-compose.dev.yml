@@ -1,0 +1,64 @@
+version: "3.8"
+services:
+  rev-proxy:
+    image: traefik:v2.2
+    networks:
+      - tomudo
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "80:80"
+      - "8080:8080"
+    command:
+      # Enable Docker in Traefik, so that it reads labels from Docker services
+      - --providers.docker
+      # Add a constraint to only use services with the label for this stack
+      # from the env var TRAEFIK_TAG
+      - --providers.docker.constraints=Label(`${TOMUDO_STACK_NAME}`)
+      # Do not expose all Docker services, only the ones explicitly exposed
+      - --providers.docker.exposedbydefault=false
+      # Disable Docker Swarm mode for local development
+      # - --providers.docker.swarmmode
+      # Enable the access log, with HTTP requests
+      - --accesslog
+      # Enable the Traefik log, for configurations and errors
+      - --log
+      # Enable the Dashboard and API
+      - --api
+      # Enable the Dashboard and API in insecure mode for local development
+      - --api.insecure=true
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${TOMUDO_STACK_NAME}-traefik-public-http.rule=Host(`${TOMUDO_TRAEFIK_PUBLIC_HOST}`)
+      - traefik.http.services.${TOMUDO_STACK_NAME}-traefik-public.loadbalancer.server.port=80
+
+  dps:
+    hostname: dps
+    image: defreitas/dns-proxy-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/resolv.conf:/etc/resolv.conf
+    environment:
+      - MG_LOG_LEVEL=WARNING
+    networks:
+      tomudo:
+
+  db:
+    depends_on:
+      - dps
+
+  todo-store:
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.constraint-label-stack=${TOMUDO_STACK_NAME}
+        - traefik.http.routers.tomudo-store-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
+        - traefik.http.services.tomudo-store.loadbalancer.server.port=${TOMUDO_TODO_STORE_PORT}
+
+  todo-generator:
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.constraint-label-stack=${TOMUDO_STACK_NAME}
+        - traefik.http.routers.tomudo-generator-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
+        - traefik.http.services.tomudo-generator.loadbalancer.server.port=${TOMUDO_TODO_GENERATOR_PORT}

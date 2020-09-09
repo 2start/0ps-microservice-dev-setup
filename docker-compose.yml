@@ -1,0 +1,56 @@
+version: "3.8"
+services:
+  db:
+    hostname: db
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: ${TOMUDO_DB_USER}
+      POSTGRES_PASSWORD: ${TOMUDO_DB_PW}
+      POSTGRES_DB: ${TOMUDO_DB_NAME}
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - tomudo
+    command: -p ${TOMUDO_DB_PORT}
+
+  todo-store:
+    image: todo-store:${TOMUDO_IMAGE_TAG}
+    build:
+      context: ./todo-store
+    hostname: todo-store
+    networks:
+      - tomudo
+    depends_on:
+      - db
+    environment:
+      TOMUDO_DB_USER: ${TOMUDO_DB_USER}
+      TOMUDO_DB_PW: ${TOMUDO_DB_PW}
+      TOMUDO_DB_NAME: ${TOMUDO_DB_NAME}
+      TOMUDO_DB_PROTOCOL: ${TOMUDO_DB_PROTOCOL}
+      TOMUDO_DB_HOST: ${TOMUDO_DB_HOST}
+      TOMUDO_DB_PORT: ${TOMUDO_DB_PORT}
+      TOMUDO_TODO_STORE_PORT: ${TOMUDO_TODO_STORE_PORT}
+
+
+
+  todo-generator:
+    image: todo-generator:${TOMUDO_IMAGE_TAG}
+    build:
+      context: ./todo-generator
+    hostname: todo-generator
+    networks:
+      - tomudo
+    depends_on:
+      - todo-store
+    environment:
+      TOMUDO_TODO_GENERATOR_PORT: ${TOMUDO_TODO_GENERATOR_PORT}
+      TOMUDO_TODO_STORE_HOST: ${TOMUDO_TODO_STORE_HOST}
+      TOMUDO_TODO_STORE_PORT: ${TOMUDO_TODO_STORE_PORT}
+
+volumes:
+  db:
+
+networks:
+  tomudo:
+    external: True
+
