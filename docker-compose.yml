@@ -19,8 +19,6 @@ services:
     hostname: todo
     networks:
       - tomudo
-    depends_on:
-      - db
     environment:
       PORT: ${TOMUDO_TODO_PORT}
       TOMUDO_DB_USER: ${TOMUDO_DB_USER}
@@ -39,8 +37,6 @@ services:
     hostname: shopping-list
     networks:
       - tomudo
-    depends_on:
-      - todo
     environment:
       PORT: ${TOMUDO_SHOPPING_LIST_PORT}
       TOMUDO_SHOPPING_LIST_PORT: ${TOMUDO_SHOPPING_LIST_PORT}
