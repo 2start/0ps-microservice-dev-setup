@@ -13,40 +13,41 @@ services:
       - tomudo
     command: -p ${TOMUDO_DB_PORT}
 
-  todo-store:
-    image: todo-store:${TOMUDO_IMAGE_TAG}
+  todo:
+    image: todo:${TOMUDO_IMAGE_TAG}
     build:
-      context: ./todo-store
-    hostname: todo-store
+      context: ./todo
+    hostname: todo
     networks:
       - tomudo
     depends_on:
       - db
     environment:
-      PORT: ${TOMUDO_TODO_STORE_PORT}
+      PORT: ${TOMUDO_TODO_PORT}
       TOMUDO_DB_USER: ${TOMUDO_DB_USER}
       TOMUDO_DB_PW: ${TOMUDO_DB_PW}
       TOMUDO_DB_NAME: ${TOMUDO_DB_NAME}
       TOMUDO_DB_PROTOCOL: ${TOMUDO_DB_PROTOCOL}
       TOMUDO_DB_HOST: ${TOMUDO_DB_HOST}
       TOMUDO_DB_PORT: ${TOMUDO_DB_PORT}
-      TOMUDO_TODO_STORE_PORT: ${TOMUDO_TODO_STORE_PORT}
+      TOMUDO_TODO_PORT: ${TOMUDO_TODO_PORT}
 
 
 
-  todo-generator:
-    image: todo-generator:${TOMUDO_IMAGE_TAG}
+  shopping-list:
+    image: shopping-list:${TOMUDO_IMAGE_TAG}
     build:
-      context: ./todo-generator
-    hostname: todo-generator
+      context: ./shopping-list
+    hostname: shopping-list
     networks:
       - tomudo
     depends_on:
-      - todo-store
+      - todo
     environment:
-      TOMUDO_TODO_GENERATOR_PORT: ${TOMUDO_TODO_GENERATOR_PORT}
-      TOMUDO_TODO_STORE_HOST: ${TOMUDO_TODO_STORE_HOST}
-      TOMUDO_TODO_STORE_PORT: ${TOMUDO_TODO_STORE_PORT}
+      PORT: ${TOMUDO_SHOPPING_LIST_PORT}
+      TOMUDO_SHOPPING_LIST_PORT: ${TOMUDO_SHOPPING_LIST_PORT}
+      TOMUDO_TODO_HOST: ${TOMUDO_TODO_HOST}
+      TOMUDO_TODO_PORT: ${TOMUDO_TODO_PORT}
 
 volumes:
   db:

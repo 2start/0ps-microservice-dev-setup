@@ -11,13 +11,13 @@ class Environment(BaseSettings):
     project_path: Path = Path(__file__).parent.parent
     log_level: str = "DEBUG"
 
-    todo_generator_port: int
-    todo_store_host: str
-    todo_store_port: int
+    shopping_list_port: int
+    todo_host: str
+    todo_port: int
 
     @property
-    def todo_store_uri(self):
-        return f"http://{self.todo_store_host}:{self.todo_store_port}"
+    def todo_uri(self):
+        return f"http://{self.todo_host}:{self.todo_port}"
 
     class Config:
         env_prefix = 'TOMUDO_'

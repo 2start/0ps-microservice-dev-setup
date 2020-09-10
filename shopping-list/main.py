@@ -6,7 +6,7 @@ from fastapi import FastAPI, HTTPException
 import schemas
 from environment import env
 
-app = FastAPI(title="Todo Generator")
+app = FastAPI(title="Shopping List")
 
 
 @app.post("/shopping_list/", response_model=schemas.ShoppingList)
@@ -23,7 +23,7 @@ def create_shopping_list(shopping_list_create: schemas.ShoppingListCreate):
     }
     print(data)
 
-    response = requests.post(f"{env.todo_store_uri}/todo", json.dumps(data))
+    response = requests.post(f"{env.todo_uri}/todo", json.dumps(data))
     try:
         response_json = response.json()
     except json.decoder.JSONDecodeError:
