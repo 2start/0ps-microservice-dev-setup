@@ -12,16 +12,13 @@ app = FastAPI(title="Shopping List")
 @app.post("/shopping_list/", response_model=schemas.ShoppingList)
 def create_shopping_list(shopping_list_create: schemas.ShoppingListCreate):
     title = shopping_list_create.title
-    description = "Items:\n"
-    description += "=======\n"
-    for item in shopping_list_create.items:
-        description += item + "[ ]\n"
+    description = "Items: "
+    description += ", ".join(shopping_list_create.items)
 
     data = {
         "title": title,
         "description": description
     }
-    print(data)
 
     response = requests.post(f"{env.todo_uri}/todo", json.dumps(data))
     try:

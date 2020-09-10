@@ -23,7 +23,9 @@ def get_all_todos(db: Session = Depends(get_db)):
 
 @app.post("/todo/", response_model=schemas.Todo)
 def create_todo(todo_create: schemas.TodoCreate, db: Session = Depends(get_db)):
-    todo = models.Todo(**todo_create.dict())  # type: ignore
+    title = "Modified: " + todo_create.title
+    description = todo_create.description
+    todo = models.Todo(title=title, description=description)  # type: ignore
     db.add(todo)
     db.commit()
     db.refresh(todo)
@@ -41,6 +43,6 @@ def get_todo(id: int, db: Session = Depends(get_db)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=env.todo_store_port, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=env.todo_port, reload=True)
 
 

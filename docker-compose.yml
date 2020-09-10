@@ -14,7 +14,6 @@ services:
     command: -p ${TOMUDO_DB_PORT}
 
   todo:
-    image: todo:${TOMUDO_IMAGE_TAG}
     build:
       context: ./todo
     hostname: todo
@@ -35,7 +34,6 @@ services:
 
 
   shopping-list:
-    image: shopping-list:${TOMUDO_IMAGE_TAG}
     build:
       context: ./shopping-list
     hostname: shopping-list

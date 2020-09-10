@@ -5,23 +5,12 @@ verify_ssl = true
 
 [dev-packages]
 uvicorn = "*"
-troposphere = "*"
-python-dotenv = "*"
 
 [packages]
 fastapi = "*"
-python-multipart = "*"
 psycopg2-binary = "*"
 sqlalchemy = "*"
-alembic = "*"
-python-jose = {extras = ["cryptography"],version = "*"}
-passlib = {extras = ["bcrypt"],version = "*"}
 pydantic = "*"
-tenacity = "*"
-emails = "*"
-jinja2 = "*"
-mangum = "*"
-uvicorn = "*"
 
 [requires]
 python_version = "3.7"
