@@ -28,3 +28,6 @@ docker-compose up
 ```
 
 
+Deploy:
+docker swarm init --advertise-addr 192.168.99.121
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.prod up --build
