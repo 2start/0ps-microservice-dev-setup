@@ -30,4 +30,5 @@ docker-compose up
 
 Deploy:
 docker swarm init --advertise-addr 192.168.99.121
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.prod up --build
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.prod build
+docker stack deploy -c docker-compose.yml -c docker-compose.prod.yml <STACK_NAME>
